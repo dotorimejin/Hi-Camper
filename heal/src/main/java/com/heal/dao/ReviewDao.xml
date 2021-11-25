@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heal.dao.ReviewDao">
+
+ 
+	<resultMap type="com.heal.dto.Review" id="reviewList">
+	  <result property="re_no" column="re_no"/>
+	  <result property="re_writer" column="re_writer"/>
+	  <result property="re_title" column="re_title"/>
+	  <result property="re_content" column="re_content"/>
+	  <result property="re_img" column="re_img"/>
+	  <result property="re_star" column="re_star"/>
+	  <result property="re_date" column="re_date"/>
+	  <result property="re_like" column="re_like"/>
+	</resultMap>
+	
+    
+	<!--게시판 조회 
+ 		public ArrayList<Review> reviewList() -->
+	<select id="reviewList" resultMap="reviewList">
+		select * from review order by re_no desc
+	</select>
+	
+	<!-- 게시판 조회 좋아요순 	
+		public ArrayList<Review> reviewLikeList() -->
+	<select id="reviewLikeList" resultMap="reviewList">
+		select * from review order by re_like desc
+	</select>
+	
+	<!-- 게시글 본문 조회 
+	public Find selectReviewDetail(String re_no); -->
+	<select id="selectReviewDetail" resultMap="reviewList">
+		select * from review where re_no=#{re_no}
+	</select>
+	
+	<!-- 게시물 작성 
+	public int insertReview (Review dto) -->
+	<insert id="insertReview" parameterType="com.heal.dto.Review">
+		insert into review
+		values(SEQ_REVIEW.nextval, #{re_writer}, #{re_title}, #{re_content}, #{re_img}, #{re_star}, #{re_date}, #{re_like})
+	</insert>
+	
+    <!-- 게시글 수정 	
+    public int updateReview (Review dto) -->
+    <insert id="updateReview" parameterType="com.heal.dto.Review">
+        UPDATE review
+		SET
+			re_writer = #{re_writer},
+			re_title = #{re_title}, 
+			re_content = #{re_content},
+			re_img = #{re_img},
+			re_star = #{re_star},
+			re_date = #{re_date},
+			re_like = #{re_like}
+		WHERE
+			re_no = #{re_no}
+    </insert>
+    
+    <!-- 게시글 삭제 
+    public int deleteReview (Review dto) -->
+    <delete id="deleteReview">
+		delete from review WHERE re_no=#{re_no}
+	</delete>
+	
+	<!-- 좋아요 추가 -->
+	<insert id="updateReviewLike" parameterType="com.heal.dto.Review">
+        UPDATE review
+		SET
+			re_like = re_like + 1
+		WHERE
+			re_no = #{re_no}
+    </insert>
+    
+    <!-- 좋아요 취소 -->
+	<insert id="cancelReviewLike" parameterType="com.heal.dto.Review">
+        UPDATE review
+		SET
+			re_like = re_like - 1
+		WHERE
+			re_no = #{re_no}
+    </insert>
+    
+    
+	<!-- 별점순으로 조회 -->
+	<!-- 최근순으로 조회 -->
+</mapper>

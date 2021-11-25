@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heal.dao.MemberDao">
+
+		<resultMap type="com.heal.dto.Member" id="member">
+				<result property="id" column="id"/>
+				<result property="nick" column="nick"/>
+				<result property="mobile" column="mobile"/>
+				<result property="gender" column="gender"/>
+				<result property="age" column="age"/>
+				<result property="last_login" column="last_login" jdbcType="VARCHAR" javaType="java.lang.String" />
+				<result property="entry_date" column="entry_date" />
+				<result property="grade" column="grade"/>
+		</resultMap>
+		
+	<!-- public String login(String memberId, String memberPw); -->
+	<select id="login" resultType="String" parameterType="map">
+		select grade 
+		from member 
+		where id = #{id} and pw = #{pw}
+	</select>
+	
+	<!-- public Member loginToMember(String memberId, String memberPw) -->
+	<select id="loginToMember" resultType="com.heal.dto.Member" parameterType="map">
+		select * 
+		from member 
+		where id=#{id} and pw=#{pw}
+	</select>
+
+	<insert id="insertMember"  parameterType="map">
+	Insert into member(
+	id, pw, nick, mobile, gender, age, last_login, grade, entry_date
+	)	
+	VALUES
+	(
+	#{id}, #{pw}, #{nick}, #{mobile}, #{gender}, #{age}, #{last_login}, #{grade}, #{entry_date}
+	)
+	
+	</insert>
+	
+	<select id="idCheck" resultType="com.heal.dto.Member">
+	SELECT 
+	*
+	FROM MEMBER
+	WHERE id= #{test00001}
+	</select>
+	
+	<select id="updateMember">
+	UPDATE member
+	SET mobile = #{mobile} , profile = #{profile}
+	WHERE id = #{id}
+	
+	</select>
+	
+		
+	<!-- public void deleteMember(String id, String pw) -->
+	<delete id="deleteMember" parameterType="map">
+		delete from member where id=#{id} and pw=#{pw}  
+	</delete>
+	
+	
+	<update id="updateLastLogin"  >
+       	UPDATE MEMBER SET last_login = #{last_login} WHERE ID = #{id}
+      </update>
+      
+      	<select id="userPw" parameterType="String"
+		resultType="com.heal.dto.Member">
+		SELECT *
+		FROM member
+		WHERE id=#{id}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+

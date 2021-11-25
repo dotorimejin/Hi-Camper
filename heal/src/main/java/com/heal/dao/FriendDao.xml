@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.heal.dao.FriendDao">
+
+	<insert id="insertProfile" parameterType="com.heal.dto.Profile">
+       INSERT INTO profile
+       VALUES (profile_SEQ.nextval, #{intro},#{interest}, #{id}, #{nick}, #{age},#{fileName}, #{fileOriName},#{fileUrl})
+	</insert>
+	
+	    <select id="getProfile" resultType="com.heal.dto.Profile">
+        SELECT  *  FROM profile where id = #{id}
+       </select> 
+       
+       <select id="findAge" resultType ="String">
+       	SELECT AGE FROM MEMBER WHERE ID = #{id}
+       </select>
+  
+       <select id="findNick" resultType ="String">
+       	SELECT  NICK FROM MEMBER WHERE ID = #{id}
+       </select>
+       
+       <delete id="deleteForm" >
+       DELETE FROM PROFILE WHERE ID = #{id}
+       </delete>
+       
+	    <select id="getAllProfile" resultType="com.heal.dto.Profile">
+        SELECT  *  FROM profile where id not in (#{id})
+       </select> 
+       
+       <insert id="addFriend" parameterType="com.heal.dto.Friend">
+     	INSERT INTO friend
+        VALUES (friend_SEQ.nextval, #{id}, #{friend})
+       </insert>
+
+  		<insert id="addFriendToo" parameterType="com.heal.dto.Friend">
+     	INSERT INTO friend
+        VALUES (friend_SEQ.nextval, #{friend}, #{id})
+       </insert>
+       
+       	 <select id="getFriendProfile" resultType="com.heal.dto.Profile">
+       	 <![CDATA[
+			select * from profile where id in 
+			(select friend from friend where id=#{id}) 
+			and ROWNUM<4
+			]]>
+       </select> 
+       
+        <select id="getFriendDetail" resultType="com.heal.dto.Profile">
+			select * from profile  where id = #{id}
+       </select>
+       
+       <delete id="deleteFriend" >
+       DELETE FROM friend WHERE friend = #{friend}
+       </delete> 
+       
+       <select id="getFriendList" resultType="com.heal.dto.Profile">
+     		 select * from profile where id in 
+			(select friend from friend where id=#{id}) 
+       </select>
+       
+       <select id="selectMe" resultType="com.heal.dto.Member">
+       	select * from member  where id = #{id}
+       </select>
+       
+       <select id ="getSameAgeFriend" resultType="com.heal.dto.Profile">
+        <![CDATA[
+       select * from profile where age = #{age} 
+       and id not in #{id}  
+        and id not in (select friend from friend where id=  #{id} )
+       and rownum <3
+       	]]>
+       </select>
+       
+       <select id="getMyInterest" resultType="String" >
+       select interest from profile where id = #{id}
+       </select>
+       
+       <select id ="getSameInterest" resultType="com.heal.dto.Profile">
+         <![CDATA[
+		select * from profile where REGEXP_LIKE (interest, #{interest}) 
+		and id not in #{id} 
+		 and id not in (select friend from friend where id= #{id} )
+		and rownum <3
+       	]]>
+       </select>
+       
+       <insert id="updateProfile"  parameterType="com.heal.dto.Profile">
+        update  profile set intro=#{intro}, interest=#{interest}, fileName=#{fileName},fileOriName= #{fileOriName},fileUrl=#{fileUrl}
+		where id=#{id}
+       </insert>
+       
+       <select id="getMyFriend" resultType="com.heal.dto.Friend" >
+       select * from friend where id=#{id}
+       </select>
+       
+
+</mapper>

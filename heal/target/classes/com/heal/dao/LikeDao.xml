@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heal.dao.LikeDao">
+
+ 
+	<resultMap type="com.heal.dto.Like" id="likeList">
+	  <result property="like_no" column="like_no"/>
+	  <result property="re_no" column="re_no"/>
+	  <result property="member_id" column="member_id"/>
+	  <result property="like_check" column="like_check"/>
+	</resultMap>
+
+ <insert id="likeCheck" parameterType="HashMap">
+    INSERT INTO review_like values (SEQ_LIKE.nextval, #{re_no}, #{member_id}, 1)
+  </insert>
+  
+  <delete id="likeCheckCancel" parameterType="HashMap">
+	DELETE FROM review_like where member_id = #{member_id} and re_no = #{re_no}
+  </delete>
+  
+  <select id="Like" parameterType="com.heal.dto.Like">
+  	select * from review_like where memebr_id = #{member_id} and re_no = #{re_no}
+  </select>
+
+
+</mapper>
+
+	
